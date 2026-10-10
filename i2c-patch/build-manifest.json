@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "module": "Independent Samsung Lunar Lake I2C research build",
+  "sources": {
+    "VoodooI2C": {"repository": "VoodooI2C/VoodooI2C", "commit": "5c0c99cc451b03790c684ce6552c3f61620ad46b", "license": "GPL-3.0", "license_file": "LICENSE.txt"},
+    "VoodooGPIO": {"repository": "VoodooI2C/VoodooGPIO", "commit": "733dc8063f5ef07288a7bc648fff5348df6d8f65", "license": "GPL-3.0", "license_file": "LICENSE.md", "submodule": "Dependencies/VoodooGPIO"},
+    "VoodooI2CHID": {"repository": "VoodooI2C/VoodooI2CHID", "commit": "27277936bc16c215ae7f9b31e76e3231778d04bd", "license": "Part of the GPL-3.0 VoodooI2C project; upstream copyright retained", "submodule": "VoodooI2C Satellites/VoodooI2CHID"},
+    "VoodooInput": {"repository": "acidanthera/VoodooInput", "commit": "d897813718c2ef9ad143b6a86240fe52dcb1693e", "license": "GPL-2.0 upstream; preserved separately without relicensing", "license_file": "LICENSE.txt"},
+    "MacKernelSDK": {"repository": "acidanthera/MacKernelSDK", "commit": "3f750085caa17ec3a7880f11c11bf4f48cd6a164", "license": "External Apple SDK headers/library with original licenses retained; not relicensed", "license_file": "LICENSE.txt", "linked_library": "Library/x86_64/libkmod.a", "linked_library_sha256": "7a751671bbe96c9c7b5416078df600b768c00c0dc5178d8acd8f52539c7ccd4e", "available_module_sources": "Library/kmod"}
+  },
+  "project_sha256": {
+    "VoodooI2C/VoodooI2C.xcodeproj/project.pbxproj": "1f5278d3b076dd0c0c5c3e14d9e3b97d89efe426b35260dbd58daba2a28fb66f",
+    "Dependencies/VoodooGPIO/VoodooGPIO.xcodeproj/project.pbxproj": "a9255c2ad52720fc535bb6782fac6f0358e40ee740220bc86e91a0cd932077f1",
+    "Dependencies/VoodooI2CServices/VoodooI2CServices.xcodeproj/project.pbxproj": "6fa460681c066664911ae450e326ba806891dc81dcd5dc0d82008c60a514cb6e",
+    "VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID.xcodeproj/project.pbxproj": "e5252f8aff7133b23641082700bfb9347baa948d5a5cc47751408e9f36b35699",
+    "VoodooInput.xcodeproj/project.pbxproj": "98fc4bd7f6d288efc3c9e7d87acbf95aceb2835e04d12e8bf696626216b6685a"
+  },
+  "expected_bundles": {
+    "VoodooGPIO.kext": "org.coolstar.VoodooGPIO",
+    "VoodooI2CServices.kext": "com.alexandred.VoodooI2CServices",
+    "VoodooI2C.kext": "com.alexandred.VoodooI2C",
+    "VoodooI2CHID.kext": "com.alexandred.VoodooI2CHID",
+    "VoodooInput.kext": "me.kishorprins.VoodooInput"
+  },
+  "target": {"pci": ["8086:A878", "8086:A879", "8086:A87A", "8086:A87B"], "subsystem": "144D:C1DD", "gpio_acpi_hid": "INTC105D", "gpio_acpi_cid": "INTC105F", "gpio_support_implemented": false, "native_hardware_tested": false},
+  "security": {"changes_firmware_secure_boot": false, "changes_efi": false, "signs_uefi_images": false}
+}

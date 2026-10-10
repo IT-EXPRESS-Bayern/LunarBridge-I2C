@@ -1,0 +1,37 @@
+LunarBridge I2C independent hardware project
+Copyright 2026 IT-EXPRESS Bayern and LunarBridge contributors.
+
+Own build/validation scripts and Samsung matching contributions are GPL-3.0-only.
+This project's LICENSE does not replace licenses of external upstream code.
+
+VoodooI2C: VoodooI2C/VoodooI2C at 5c0c99cc451b03790c684ce6552c3f61620ad46b.
+Its GPLv3 license and original copyrights are retained in corresponding source.
+The Samsung matching patch and build packaging modifications are marked experimental.
+
+VoodooGPIO: VoodooI2C/VoodooGPIO at 733dc8063f5ef07288a7bc648fff5348df6d8f65.
+Its original GPLv3 LICENSE.md and copyright notices remain intact.
+No Lunar Lake GPIO matching or pin-controller implementation has been added.
+
+VoodooI2CHID: VoodooI2C/VoodooI2CHID at 27277936bc16c215ae7f9b31e76e3231778d04bd.
+It is an upstream satellite of the GPLv3 VoodooI2C project. Original source
+and copyright notices remain intact.
+
+VoodooInput: acidanthera/VoodooInput at d897813718c2ef9ad143b6a86240fe52dcb1693e.
+This separately built, unchanged upstream input component retains its GPLv2
+LICENSE.txt. It is not relicensed as GPLv3. Its interface headers remain
+in the corresponding upstream source tree with their original notices.
+
+MacKernelSDK: external Apple kernel SDK dependency at
+3f750085caa17ec3a7880f11c11bf4f48cd6a164 in acidanthera/MacKernelSDK.
+Its headers and libkmod retain their original Apple licenses. They are not
+LunarBridge code and are not relicensed or copied into this repository.
+The build links SDK Library/x86_64/libkmod.a, SHA-256
+7a751671bbe96c9c7b5416078df600b768c00c0dc5178d8acd8f52539c7ccd4e.
+The experimental package includes SDK LICENSE.txt (Apple Public Source
+License 2.0), original README, available Library/kmod source and a dedicated
+SOURCE-NOTICES-SDK.txt. The prebuilt library has not been rebuilt from
+these sources and compared byte-for-byte; no such proof is claimed.
+
+Corresponding upstream source, original license texts, build scripts, pins
+and source hashes accompany the experimental I2C build package. A successful
+CI build is not a macOS Tahoe load, hardware, GPIO/HID or Secure Boot test.

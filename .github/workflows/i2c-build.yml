@@ -1,0 +1,70 @@
+name: Independent Samsung I2C build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'i2c-patch/**'
+      - 'docs/I2C_BACKEND.md'
+      - 'tools/macho.py'
+      - '.github/workflows/i2c-build.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  i2c:
+    runs-on: macos-26-intel
+    timeout-minutes: 20
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
+        with:
+          persist-credentials: false
+      - name: Checkout pinned VoodooI2C source
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
+        with:
+          repository: VoodooI2C/VoodooI2C
+          ref: 5c0c99cc451b03790c684ce6552c3f61620ad46b
+          path: build/i2c-checkouts/VoodooI2C
+          persist-credentials: false
+      - name: Checkout pinned VoodooInput source
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
+        with:
+          repository: acidanthera/VoodooInput
+          ref: d897813718c2ef9ad143b6a86240fe52dcb1693e
+          path: build/i2c-checkouts/VoodooInput
+          persist-credentials: false
+      - name: Checkout pinned external kernel SDK
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
+        with:
+          repository: acidanthera/MacKernelSDK
+          ref: 3f750085caa17ec3a7880f11c11bf4f48cd6a164
+          path: build/i2c-checkouts/MacKernelSDK
+          persist-credentials: false
+      - name: Fetch only pinned GPIO and HID submodules
+        run: git -C build/i2c-checkouts/VoodooI2C submodule update --init --depth 1 -- Dependencies/VoodooGPIO 'VoodooI2C Satellites/VoodooI2CHID'
+      - name: Verify narrow controller matching and upstream timing reference
+        run: python3 i2c-patch/test_patch.py --source build/i2c-checkouts/VoodooI2C --fetch-reference
+      - name: Prepare independent driver sources
+        run: >-
+          python3 i2c-patch/prepare_build.py
+          --source build/i2c-checkouts/VoodooI2C
+          --input-source build/i2c-checkouts/VoodooInput
+          --sdk build/i2c-checkouts/MacKernelSDK
+          --output build/i2c-prepared
+      - name: Test preparation and package validation
+        run: python3 i2c-patch/test_build.py --prepared build/i2c-prepared
+      - name: Build and validate five separate native kexts
+        run: python3 i2c-patch/build_i2c.py --prepared build/i2c-prepared --output build/i2c-native
+      - name: Upload independent I2C research package and corresponding source
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: samsung-lunar-lake-i2c-${{ github.sha }}
+          path: |
+            build/i2c-native/LunarBridge-I2C-Samsung-Experimental.zip
+            build/i2c-native/LunarBridge-I2C-Samsung-Experimental.zip.sha256
+            build/i2c-native/i2c-build-report.json
+          if-no-files-found: error
+          retention-days: 14
