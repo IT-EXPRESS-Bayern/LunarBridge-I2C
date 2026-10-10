@@ -15,6 +15,11 @@
     "VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID.xcodeproj/project.pbxproj": "e5252f8aff7133b23641082700bfb9347baa948d5a5cc47751408e9f36b35699",
     "VoodooInput.xcodeproj/project.pbxproj": "98fc4bd7f6d288efc3c9e7d87acbf95aceb2835e04d12e8bf696626216b6685a"
   },
+  "project_version_alignment": {
+    "Dependencies/VoodooGPIO/VoodooGPIO.xcodeproj/project.pbxproj": {"info_plist": "Dependencies/VoodooGPIO/VoodooGPIO/Info.plist", "original_project_version": "1.0.0d1", "bundle_version": "1.1"},
+    "Dependencies/VoodooI2CServices/VoodooI2CServices.xcodeproj/project.pbxproj": {"info_plist": "Dependencies/VoodooI2CServices/VoodooI2CServices/Info.plist", "original_project_version": "1.0.0d1", "bundle_version": "1"},
+    "VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID.xcodeproj/project.pbxproj": {"info_plist": "VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/Info.plist", "original_project_version": "1.0.0d1", "bundle_version": "1"}
+  },
   "expected_bundles": {
     "VoodooGPIO.kext": "org.coolstar.VoodooGPIO",
     "VoodooI2CServices.kext": "com.alexandred.VoodooI2CServices",

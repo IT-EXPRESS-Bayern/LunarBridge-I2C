@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import platform
 import plistlib
+import re
 import subprocess
 import sys
 import zipfile
@@ -53,7 +54,12 @@ def validate_bundle(bundle):
         raise ValueError('Unexpected kernel executable size')
     metadata = inspect_macho(data, require_kext=True)
     if metadata['identifier'] != expected or metadata['version'] != info.get('CFBundleVersion'):
-        raise ValueError('Mach-O kernel metadata does not match Info.plist')
+        fields = {'expected_identifier': expected, 'binary_identifier': metadata['identifier'],
+                  'plist_version': info.get('CFBundleVersion'), 'binary_version': metadata['version']}
+        controlled = {key: value if isinstance(value, str) and re.fullmatch(r'[A-Za-z0-9_.-]{1,64}', value)
+                      else '<invalid>' for key, value in fields.items()}
+        raise ValueError('Mach-O kernel metadata does not match Info.plist: ' +
+                         bundle.name + ' ' + json.dumps(controlled, sort_keys=True))
     if metadata['has_code_signature']:
         raise ValueError('Build is expected to be unsigned; signing requires a separate qualified policy')
     libraries = info.get('OSBundleLibraries', {})

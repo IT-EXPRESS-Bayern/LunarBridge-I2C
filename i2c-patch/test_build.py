@@ -21,7 +21,7 @@ import prepare_build
 PREPARED = None
 
 
-def kernel_fixture(identifier='org.coolstar.VoodooGPIO', kind=11):
+def kernel_fixture(identifier='org.coolstar.VoodooGPIO', kind=11, version='1.1'):
     """Non-executable, synthetic Mach-O parser input; not a compiled kernel driver."""
     text_at, init_at, data_at, symbol_at, strings_at = 384, 400, 408, 608, 656
     strings = b'\0_kmod_info\0__start\0__stop\0'
@@ -33,7 +33,7 @@ def kernel_fixture(identifier='org.coolstar.VoodooGPIO', kind=11):
         (b'__mod_init_func', 0x1010, 8, init_at, 9), (b'__data', 0x1018, 200, data_at, 0))):
         struct.pack_into('<16s16sQQ8I', data, 104 + index * 80, name, b'__TEXT', address, size, offset, 3, 0, 0, flags, 0, 0, 0)
     struct.pack_into('<6I', data, 344, 2, 24, symbol_at, 3, strings_at, len(strings))
-    for offset, value in ((16, identifier), (80, '1.1')):
+    for offset, value in ((16, identifier), (80, version)):
         encoded = value.encode('ascii')
         data[data_at + offset:data_at + offset + len(encoded)] = encoded
     for index, (name, section, address) in enumerate((('_kmod_info', 3, 0x1018), ('__start', 1, 0x1000), ('__stop', 1, 0x1008))):
@@ -42,7 +42,7 @@ def kernel_fixture(identifier='org.coolstar.VoodooGPIO', kind=11):
     return bytes(data)
 
 
-def synthetic_bundle(parent, *, name='VoodooGPIO.kext', kind=11, binary_identifier=None, libraries=None):
+def synthetic_bundle(parent, *, name='VoodooGPIO.kext', kind=11, binary_identifier=None, binary_version='1.1', libraries=None):
     folder = parent / name
     (folder / 'Contents/MacOS').mkdir(parents=True)
     identifier = prepare_build.MANIFEST['expected_bundles'][name]
@@ -54,7 +54,7 @@ def synthetic_bundle(parent, *, name='VoodooGPIO.kext', kind=11, binary_identifi
         info['IOKitPersonalities'] = {'VoodooI2CPCILunarLakeSamsungController':
             {'IOPCIPrimaryMatch': '0xa8788086 0xa8798086 0xa87a8086 0xa87b8086', 'IOPCISecondaryMatch': '0xc1dd144d'}}
     (folder / 'Contents/Info.plist').write_bytes(plistlib.dumps(info))
-    (folder / 'Contents/MacOS' / executable).write_bytes(kernel_fixture(binary_identifier or identifier, kind))
+    (folder / 'Contents/MacOS' / executable).write_bytes(kernel_fixture(binary_identifier or identifier, kind, binary_version))
     return folder
 
 
@@ -76,6 +76,27 @@ class PreparationChecks(unittest.TestCase):
         self.assertEqual(len(report['project_changes']), 5)
         for relative, expected in prepare_build.MANIFEST['project_sha256'].items():
             self.assertEqual(report['project_changes'][relative]['original_sha256'], expected)
+        for relative, alignment in prepare_build.MANIFEST['project_version_alignment'].items():
+            self.assertEqual(report['project_changes'][relative]['version_alignment'], alignment)
+
+    def test_every_prepared_module_version_matches_bundle_version(self):
+        expected_versions = {'VoodooGPIO': '1.1', 'VoodooI2CServices': '1', 'VoodooI2C': '2.9.1',
+                             'VoodooI2CHID': '1', 'VoodooInput': '1.1.7'}
+        for target, relative in build_i2c.TARGETS:
+            project = PREPARED / relative
+            text = (project / 'project.pbxproj').read_text()
+            values = {}
+            for setting in ('MODULE_VERSION', 'CURRENT_PROJECT_VERSION', 'INFOPLIST_FILE'):
+                found = re.findall(r'(?m)^\s*' + setting + r' = ([^;\n]+);$', text)
+                self.assertEqual(len(found), 2, (target, setting))
+                self.assertEqual(found[0], found[1], (target, setting))
+                values[setting] = found[0].strip('"')
+            current = values['CURRENT_PROJECT_VERSION'].replace('$(MODULE_VERSION)', values['MODULE_VERSION'])
+            info = plistlib.loads((project.parent / values['INFOPLIST_FILE']).read_bytes())
+            bundle = info['CFBundleVersion'].replace('$(CURRENT_PROJECT_VERSION)', current).replace('$(MODULE_VERSION)', values['MODULE_VERSION'])
+            self.assertEqual(values['MODULE_VERSION'], expected_versions[target], target)
+            self.assertEqual(current, bundle, target)
+            self.assertEqual(values['MODULE_VERSION'], bundle, target)
 
     def test_only_active_source_phases_build_the_i2c_core(self):
         data = (PREPARED / 'VoodooI2C/VoodooI2C/VoodooI2C.xcodeproj/project.pbxproj').read_text()
@@ -187,6 +208,18 @@ class PackageRejectionChecks(unittest.TestCase):
     def test_rejects_kernel_binary_from_another_driver(self):
         with tempfile.TemporaryDirectory() as temporary, self.assertRaises(ValueError):
             build_i2c.validate_bundle(synthetic_bundle(Path(temporary), binary_identifier='de.nordapps.LunarBridge'))
+
+    def test_rejects_upstream_version_mismatch_with_controlled_values(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            bundle = synthetic_bundle(Path(temporary), binary_version='1.0.0d1')
+            with self.assertRaises(ValueError) as caught:
+                build_i2c.validate_bundle(bundle)
+            message = str(caught.exception)
+            self.assertIn('VoodooGPIO.kext', message)
+            self.assertIn('"binary_version": "1.0.0d1"', message)
+            self.assertIn('"plist_version": "1.1"', message)
+            self.assertIn('"expected_identifier": "org.coolstar.VoodooGPIO"', message)
+            self.assertIn('"binary_identifier": "org.coolstar.VoodooGPIO"', message)
 
     def test_rejects_nested_plugins(self):
         with tempfile.TemporaryDirectory() as temporary:

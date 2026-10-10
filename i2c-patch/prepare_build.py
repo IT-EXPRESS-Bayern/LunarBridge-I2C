@@ -7,6 +7,7 @@ import io
 import json
 import os
 from pathlib import Path, PurePosixPath
+import plistlib
 import re
 import stat
 import subprocess
@@ -67,6 +68,20 @@ def replace_once(text, pattern, replacement, label):
     if count != 1:
         raise ValueError('Pinned project structure mismatch: ' + label)
     return result
+
+
+def align_project_versions(text, alignment):
+    """Keep the declared bundle version and make generated kmod metadata agree."""
+    original = alignment['original_project_version']
+    version = alignment['bundle_version']
+    if not re.fullmatch(r'[0-9]+(?:\.[0-9]+){0,2}', version):
+        raise ValueError('Unexpected pinned bundle version')
+    for setting in ('CURRENT_PROJECT_VERSION', 'MODULE_VERSION'):
+        pattern = r'(?m)^(\s*' + setting + r' = )' + re.escape(original) + r';$'
+        text, count = re.subn(pattern, lambda match: match.group(1) + version + ';', text)
+        if count != 2:
+            raise ValueError('Pinned Debug/Release version structure mismatch: ' + setting)
+    return text
 
 
 def patch_project(text, *, sdk_library, core=False, input_project=False):
@@ -132,8 +147,16 @@ def prepare(source, input_source, sdk, output, git='git'):
         modified = patch_project(data.decode('utf-8'), sdk_library=library_relative,
                                  core=relative == 'VoodooI2C/VoodooI2C.xcodeproj/project.pbxproj',
                                  input_project=relative.startswith('VoodooInput.xcodeproj'))
+        alignment = MANIFEST['project_version_alignment'].get(relative)
+        if alignment:
+            info = plistlib.loads((roots['VoodooI2C'] / alignment['info_plist']).read_bytes())
+            if info.get('CFBundleVersion') != alignment['bundle_version']:
+                raise ValueError('Pinned bundle version mismatch: ' + relative)
+            modified = align_project_versions(modified, alignment)
         project.write_text(modified, encoding='utf-8', newline='\n')
         changes[relative] = {'original_sha256': expected_hash, 'prepared_sha256': digest(project.read_bytes())}
+        if alignment:
+            changes[relative]['version_alignment'] = alignment
     # The unchanged upstream source set and original license texts accompany each driver.
     report = {'schema': 1, 'source_pins': MANIFEST['sources'], 'project_changes': changes,
               'patch_sha256': digest((HERE / 'VoodooI2C-LunarLake-Samsung.patch').read_bytes()),
