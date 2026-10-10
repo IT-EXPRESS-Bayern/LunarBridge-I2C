@@ -1,0 +1,25 @@
+{
+  "repository_url": "https://github.com/IT-EXPRESS-Bayern/LunarBridge-I2C",
+  "source_commit": "94fbfbc256b6ffae06eb88a1462b4fa4dcb0db8f",
+  "workflow_run_id": 38090170403,
+  "workflow_url": "https://github.com/IT-EXPRESS-Bayern/LunarBridge-I2C/actions/runs/38090170403",
+  "status": "completed",
+  "conclusion": "success",
+  "local_distinct_tests_passed": 28,
+  "native_target_hardware_tests": 0,
+  "verified_on": "2026-10-11",
+  "scope": "Hosted workflow and exact source commit; no Samsung target test.",
+  "later_documentation_commits_are_separate": true,
+  "target_boot_or_secure_boot_verified": false,
+  "actual_gpu_execution_or_metal_implemented": false,
+  "artifact_metadata": [
+    {
+      "id": 11683054557,
+      "name": "samsung-lunar-lake-i2c-94fbfbc256b6ffae06eb88a1462b4fa4dcb0db8f",
+      "bytes": 1097961,
+      "sha256": "3ce37a6e790cce8a6cb9c18b946dd0b5234c59037fe17d2a734bf76770761ad2",
+      "workflow_run_id": 38090170403,
+      "source_commit": "94fbfbc256b6ffae06eb88a1462b4fa4dcb0db8f"
+    }
+  ]
+}

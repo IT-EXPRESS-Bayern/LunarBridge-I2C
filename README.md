@@ -9,3 +9,5 @@ The build produces five independent kernel bundles: `VoodooGPIO.kext`, `VoodooI2
 Build and source verification run in the separate [I2C workflow](.github/workflows/i2c-build.yml). Sources and actions are pinned. No firmware Secure Boot settings, Windows drivers, storage partitions or EFI files are changed by these scripts. Unsigned build artifacts require a separately qualified native boot and trust-chain setup before target testing.
 
 Original upstream licenses and copyrights remain intact. `LICENSE` covers this repository's own GPLv3 build, validation and patch contributions. The separately built VoodooInput component retains its original GPLv2 license; see [NOTICE](NOTICE).
+
+Der erfolgreiche Online-Prüflauf und sein exakter Quellstand sind in [docs/CI_VALIDATION.json](docs/CI_VALIDATION.json) festgehalten. Spätere Dokumentations-Commits sind davon getrennt; dieser CI-Lauf ist kein Gerätefunktionstest auf dem Samsung.
