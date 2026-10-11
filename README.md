@@ -2,7 +2,7 @@
 
 Independent I2C controller and HID research for the Samsung Galaxy Book5 Pro NP960XHA-KG3DE. This repository builds separately from the LunarBridge GPU project.
 
-The Samsung source patch narrowly matches Intel Lunar Lake I2C controllers `8086:A878`–`8086:A87B` with subsystem `144D:C1DD`. It does not implement a new GPIO platform or establish working touchpad/touchscreen support under macOS Tahoe.
+The Samsung source patch narrowly matches Intel Lunar Lake I2C controllers `8086:A878`–`8086:A87B` with subsystem `144D:C1DD`. An experimental, disabled-by-default GPI1 GPIO implementation now uses the observed Samsung ACPI layout, checks ownership and bounds, and routes I2C clients by their selected ACPI resource source. Working touchpad/touchscreen support under macOS Tahoe has not been established. See [the GPIO port and remaining hardware checks](docs/GPIO_PORT.md).
 
 The build produces five independent kernel bundles: `VoodooGPIO.kext`, `VoodooI2CServices.kext`, `VoodooI2C.kext`, `VoodooI2CHID.kext`, and `VoodooInput.kext`. Their dependency order and remaining target-device checks are documented in [the I2C backend](docs/I2C_BACKEND.md).
 
@@ -10,4 +10,4 @@ Build and source verification run in the separate [I2C workflow](.github/workflo
 
 Original upstream licenses and copyrights remain intact. `LICENSE` covers this repository's own GPLv3 build, validation and patch contributions. The separately built VoodooInput component retains its original GPLv2 license; see [NOTICE](NOTICE).
 
-Der erfolgreiche Online-Prüflauf und sein exakter Quellstand sind in [docs/CI_VALIDATION.json](docs/CI_VALIDATION.json) festgehalten. Spätere Dokumentations-Commits sind davon getrennt; dieser CI-Lauf ist kein Gerätefunktionstest auf dem Samsung.
+Der erfolgreiche Online-Prüflauf des bisherigen Fünf-Kext-Builds und sein exakter Quellstand sind in [docs/CI_VALIDATION.json](docs/CI_VALIDATION.json) festgehalten. Dieser Lauf enthielt den neuen GPIO-Port noch nicht. Für dessen aktuellen Quellstand stehen der erneute native CI-Build und alle Samsung-Geräteprüfungen aus.

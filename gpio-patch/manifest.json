@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "experiment": "Samsung GPI1 only, native hardware untested",
+  "linux_reference": {
+    "url": "https://github.com/torvalds/linux/blob/e5f0a698b34ed76002dc5cff3804a61c80233a7a/drivers/pinctrl/intel/pinctrl-intel-platform.c",
+    "license": "GPL-2.0; inspected only, no implementation copied"
+  },
+  "snapshot_input_sha256": {
+    "Dependencies/VoodooI2CACPIResourcesParser/VoodooI2CACPIResourcesParser.hpp": "0d633b8a5fa1843bfdcb06b400625c5e72410faa7a17e01f7024dfce43a6b3ff",
+    "Dependencies/VoodooI2CACPIResourcesParser/VoodooI2CACPIResourcesParser.cpp": "a7662d5550da2a59af5a3c612111a630a0ceac0e5d99c5e2eddacab3d3d0b594",
+    "VoodooI2C/VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.cpp": "03d73e22ea1ed55bbcd7a913f36ea8e461276428f957e212ae3d90c72dfd9020",
+    "VoodooI2C/VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp": "4f896d8c68af2d6edd380a8fd8493fa29a0062e255a323924a1d2aa68ab6ee12",
+    "Dependencies/VoodooGPIO/VoodooGPIO/Info.plist": "5fa40d5dc24851214f8a9462390efdf93d3d52674c72949d96e1ffd17f36f843",
+    "Dependencies/VoodooGPIO/VoodooGPIO.xcodeproj/project.pbxproj": "ef340a7e0e9683d9ee79d4fb4ffbd0f097c69f7e41ff4b485281aea1d048c3b7"
+  },
+  "owned_source_sha256": {
+    "VoodooGPIOSamsungLunarLake.cpp": "349228c776bd772aae2009229c1ceb811ced3d3734233b3f3fbc45ec7691f6ff",
+    "VoodooGPIOSamsungLunarLake.hpp": "d6a66dbdb251bccdb0fe7094e10686bd556f37e9447595a35dd9b0af8370e657",
+    "LunarLakeGPIOModel.hpp": "c48cce1bab225ccb51ce475bcff3a36455873d9004b999a2be7a5fdbc69617f6",
+    "GPIOResourceSource.hpp": "132279901608e550cbe9b2c882d6cf19c03c91be61d8712820f10a8d3d299c1e"
+  },
+  "patch_sha256": "473dcfd9d97dee4272145a96854c81734ea90de7702f5e592b05572bf7b6e850"
+}

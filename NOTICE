@@ -10,7 +10,14 @@ The Samsung matching patch and build packaging modifications are marked experime
 
 VoodooGPIO: VoodooI2C/VoodooGPIO at 733dc8063f5ef07288a7bc648fff5348df6d8f65.
 Its original GPLv3 LICENSE.md and copyright notices remain intact.
-No Lunar Lake GPIO matching or pin-controller implementation has been added.
+An independently authored GPL-3.0-only Samsung GPI1 class and bounded ACPI
+resource-source reader are added alongside the unchanged upstream platform
+classes. The experimental personality is disabled by default. GPIO and HID
+function on the Samsung target have not been established.
+Linux pinctrl-intel-platform/pinctrl-intel at
+e5f0a698b34ed76002dc5cff3804a61c80233a7a were inspected as GPL-2.0 references
+for hardware/property semantics. No Linux implementation is copied into this
+repository, its generated GPIO patch or its corresponding-source package.
 
 VoodooI2CHID: VoodooI2C/VoodooI2CHID at 27277936bc16c215ae7f9b31e76e3231778d04bd.
 It is an upstream satellite of the GPLv3 VoodooI2C project. Original source

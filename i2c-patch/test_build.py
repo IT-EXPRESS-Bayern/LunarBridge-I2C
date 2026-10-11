@@ -23,8 +23,8 @@ PREPARED = None
 
 def kernel_fixture(identifier='org.coolstar.VoodooGPIO', kind=11, version='1.1'):
     """Non-executable, synthetic Mach-O parser input; not a compiled kernel driver."""
-    text_at, init_at, data_at, symbol_at, strings_at = 384, 400, 408, 608, 656
-    strings = b'\0_kmod_info\0__start\0__stop\0'
+    text_at, init_at, data_at, symbol_at, strings_at = 384, 400, 408, 608, 672
+    strings = b'\0_kmod_info\0__start\0__stop\0_synthetic_VoodooGPIOSamsungLunarLake\0'
     data = bytearray(strings_at + len(strings))
     struct.pack_into('<8I', data, 0, 0xfeedfacf, 0x01000007, 3, kind, 2, 336, 0, 0)
     struct.pack_into('<II16sQQQQiiII', data, 32, 0x19, 312, b'__TEXT', 0x1000, 224, text_at, 224, 7, 3, 3, 0)
@@ -32,11 +32,12 @@ def kernel_fixture(identifier='org.coolstar.VoodooGPIO', kind=11, version='1.1')
         (b'__text', 0x1000, 16, text_at, 0x80000400),
         (b'__mod_init_func', 0x1010, 8, init_at, 9), (b'__data', 0x1018, 200, data_at, 0))):
         struct.pack_into('<16s16sQQ8I', data, 104 + index * 80, name, b'__TEXT', address, size, offset, 3, 0, 0, flags, 0, 0, 0)
-    struct.pack_into('<6I', data, 344, 2, 24, symbol_at, 3, strings_at, len(strings))
+    struct.pack_into('<6I', data, 344, 2, 24, symbol_at, 4, strings_at, len(strings))
     for offset, value in ((16, identifier), (80, version)):
         encoded = value.encode('ascii')
         data[data_at + offset:data_at + offset + len(encoded)] = encoded
-    for index, (name, section, address) in enumerate((('_kmod_info', 3, 0x1018), ('__start', 1, 0x1000), ('__stop', 1, 0x1008))):
+    for index, (name, section, address) in enumerate((('_kmod_info', 3, 0x1018), ('__start', 1, 0x1000), ('__stop', 1, 0x1008),
+                                                   ('_synthetic_VoodooGPIOSamsungLunarLake', 1, 0x1004))):
         struct.pack_into('<IBBHQ', data, symbol_at + index * 16, strings.index(name.encode() + b'\0'), 0x0f, section, 0, address)
     data[strings_at:] = strings
     return bytes(data)
@@ -53,6 +54,10 @@ def synthetic_bundle(parent, *, name='VoodooGPIO.kext', kind=11, binary_identifi
     if name == 'VoodooI2C.kext':
         info['IOKitPersonalities'] = {'VoodooI2CPCILunarLakeSamsungController':
             {'IOPCIPrimaryMatch': '0xa8788086 0xa8798086 0xa87a8086 0xa87b8086', 'IOPCISecondaryMatch': '0xc1dd144d'}}
+    if name == 'VoodooGPIO.kext':
+        info['IOKitPersonalities'] = {'VoodooGPIOSamsungLunarLake': {
+            'IOClass': 'VoodooGPIOSamsungLunarLake', 'IONameMatch': ['INTC105D', 'INTC105F'],
+            'IOProviderClass': 'IOACPIPlatformDevice', 'LunarBridgeGPIOEnabled': False}}
     (folder / 'Contents/Info.plist').write_bytes(plistlib.dumps(info))
     (folder / 'Contents/MacOS' / executable).write_bytes(kernel_fixture(binary_identifier or identifier, kind, binary_version))
     return folder
@@ -108,7 +113,7 @@ class PreparationChecks(unittest.TestCase):
         for required in ('Sources', 'Frameworks', 'Headers', 'Resources'):
             self.assertIn(required, phases)
 
-    def test_samsung_patch_is_exact_and_uses_no_gpio_alias(self):
+    def test_samsung_patch_is_exact_and_gpio_port_stays_disabled(self):
         data = (PREPARED / 'VoodooI2C/VoodooI2C/VoodooI2C/Info.plist').read_bytes()
         expected = json.loads((prepare_build.HERE / 'patch-info.json').read_text())
         self.assertEqual(hashlib.sha256(data).hexdigest(), expected['patched_sha256'])
@@ -116,6 +121,9 @@ class PreparationChecks(unittest.TestCase):
         self.assertEqual(personality['IOPCIPrimaryMatch'], '0xa8788086 0xa8798086 0xa87a8086 0xa87b8086')
         self.assertEqual(personality['IOPCISecondaryMatch'], '0xc1dd144d')
         gpio = plistlib.loads((PREPARED / 'VoodooI2C/Dependencies/VoodooGPIO/VoodooGPIO/Info.plist').read_bytes())
+        experimental = gpio['IOKitPersonalities'].pop('VoodooGPIOSamsungLunarLake')
+        self.assertIs(experimental['LunarBridgeGPIOEnabled'], False)
+        self.assertEqual(experimental['IOClass'], 'VoodooGPIOSamsungLunarLake')
         self.assertNotIn('INTC105D', str(gpio['IOKitPersonalities']))
         self.assertNotIn('INTC105F', str(gpio['IOKitPersonalities']))
 
@@ -196,6 +204,8 @@ class PackageRejectionChecks(unittest.TestCase):
                 self.assertIn('source/MacKernelSDK/LICENSE.txt', paths)
                 self.assertIn('source/MacKernelSDK/Library/kmod/c_start.c', paths)
                 self.assertIn('SOURCE-NOTICES-SDK.txt', paths)
+                self.assertIn('source/LunarBridge/gpio-patch/prepare_gpio.py', paths)
+                self.assertIn('source/LunarBridge/gpio-patch/VoodooGPIOSamsungLunarLake.cpp', paths)
                 self.assertEqual(report['linked_sdk_library']['sha256'], prepare_build.MANIFEST['sources']['MacKernelSDK']['linked_library_sha256'])
                 self.assertFalse(report['linked_sdk_library']['prebuilt_library_rebuilt_from_source_and_compared'])
                 hashes = json.loads(archive.read('SOURCE-HASHES.json'))
@@ -225,6 +235,16 @@ class PackageRejectionChecks(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             bundle = synthetic_bundle(Path(temporary))
             (bundle / 'Contents/PlugIns').mkdir()
+            with self.assertRaises(ValueError):
+                build_i2c.validate_bundle(bundle)
+
+    def test_rejects_accidentally_enabled_experimental_gpio(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            bundle = synthetic_bundle(Path(temporary))
+            path = bundle / 'Contents/Info.plist'
+            info = plistlib.loads(path.read_bytes())
+            info['IOKitPersonalities']['VoodooGPIOSamsungLunarLake']['LunarBridgeGPIOEnabled'] = True
+            path.write_bytes(plistlib.dumps(info))
             with self.assertRaises(ValueError):
                 build_i2c.validate_bundle(bundle)
 

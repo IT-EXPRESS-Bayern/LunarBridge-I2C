@@ -1,0 +1,803 @@
+--- a/Dependencies/VoodooGPIO/VoodooGPIO.xcodeproj/project.pbxproj
++++ b/Dependencies/VoodooGPIO/VoodooGPIO.xcodeproj/project.pbxproj
+@@ -7,6 +7,9 @@
+ 	objects = {
+ 
+ /* Begin PBXBuildFile section */
++		73FBBDD3653F1480846F9A26 /* LunarLakeGPIOModel.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 5913FC1C93E95F52FC707094 /* LunarLakeGPIOModel.hpp */; };
++		6A67978620299812F23511ED /* VoodooGPIOSamsungLunarLake.hpp in Headers */ = {isa = PBXBuildFile; fileRef = DB2348FB4ACD0FF4F142E5DB /* VoodooGPIOSamsungLunarLake.hpp */; };
++		94A5D308A4808F9806A0AAC8 /* VoodooGPIOSamsungLunarLake.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82775A7FA51FB7E43E4A9353 /* VoodooGPIOSamsungLunarLake.cpp */; };
+ 		0FC03704258E6F890026BA14 /* libkmod.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC03703258E6F890026BA14 /* libkmod.a */; };
+ 		406D56CB29B5050400427C54 /* VoodooGPIOIntel.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 406D56CA29B5050400427C54 /* VoodooGPIOIntel.hpp */; };
+ 		40AAD2D429B657EC001C60CD /* VoodooGPIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 40AAD2D329B657EC001C60CD /* VoodooGPIO.cpp */; };
+@@ -27,6 +30,9 @@
+ /* End PBXBuildFile section */
+ 
+ /* Begin PBXFileReference section */
++		5913FC1C93E95F52FC707094 /* LunarLakeGPIOModel.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LunarLakeGPIOModel.hpp; sourceTree = "<group>"; };
++		DB2348FB4ACD0FF4F142E5DB /* VoodooGPIOSamsungLunarLake.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VoodooGPIOSamsungLunarLake.hpp; sourceTree = "<group>"; };
++		82775A7FA51FB7E43E4A9353 /* VoodooGPIOSamsungLunarLake.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooGPIOSamsungLunarLake.cpp; sourceTree = "<group>"; };
+ 		0FC03703258E6F890026BA14 /* libkmod.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libkmod.a; path = "../../../MacKernelSDK/Library/x86_64/libkmod.a"; sourceTree = "<group>"; };
+ 		406D56CA29B5050400427C54 /* VoodooGPIOIntel.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VoodooGPIOIntel.hpp; sourceTree = "<group>"; };
+ 		40AAD2D329B657EC001C60CD /* VoodooGPIO.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooGPIO.cpp; sourceTree = "<group>"; };
+@@ -130,6 +136,9 @@
+ 				FBE40CF524E2366B00CDC4ED /* IceLake-LP */,
+ 				F10447AB1F4278AB00BA5A85 /* SunrisePoint-H */,
+ 				F142D1181F42C244007AA5C6 /* SunrisePoint-LP */,
++				82775A7FA51FB7E43E4A9353 /* VoodooGPIOSamsungLunarLake.cpp */,
++				DB2348FB4ACD0FF4F142E5DB /* VoodooGPIOSamsungLunarLake.hpp */,
++				5913FC1C93E95F52FC707094 /* LunarLakeGPIOModel.hpp */,
+ 				40AAD2D329B657EC001C60CD /* VoodooGPIO.cpp */,
+ 				F1F172C81F42263A00AD98FA /* VoodooGPIO.hpp */,
+ 				F1F172CA1F42263A00AD98FA /* VoodooGPIOIntel.cpp */,
+@@ -158,6 +167,8 @@
+ 			isa = PBXHeadersBuildPhase;
+ 			buildActionMask = 2147483647;
+ 			files = (
++				73FBBDD3653F1480846F9A26 /* LunarLakeGPIOModel.hpp in Headers */,
++				6A67978620299812F23511ED /* VoodooGPIOSamsungLunarLake.hpp in Headers */,
+ 				FBE40CF924E2373400CDC4ED /* VoodooGPIOIceLakeLP.hpp in Headers */,
+ 				F1F172C91F42263A00AD98FA /* VoodooGPIO.hpp in Headers */,
+ 				406D56CB29B5050400427C54 /* VoodooGPIOIntel.hpp in Headers */,
+@@ -238,6 +249,7 @@
+ 			isa = PBXSourcesBuildPhase;
+ 			buildActionMask = 2147483647;
+ 			files = (
++				94A5D308A4808F9806A0AAC8 /* VoodooGPIOSamsungLunarLake.cpp in Sources */,
+ 				F10447AE1F4278CD00BA5A85 /* VoodooGPIOSunrisePointH.cpp in Sources */,
+ 				F142D11B1F42C255007AA5C6 /* VoodooGPIOSunrisePointLP.cpp in Sources */,
+ 				ACD8275D219D034F0041DE1B /* VoodooGPIOCannonLakeLP.cpp in Sources */,
+--- a/Dependencies/VoodooGPIO/VoodooGPIO/Info.plist
++++ b/Dependencies/VoodooGPIO/VoodooGPIO/Info.plist
+@@ -113,6 +113,22 @@
+ 			<key>IOProviderClass</key>
+ 			<string>IOService</string>
+ 		</dict>
++		<key>VoodooGPIOSamsungLunarLake</key>
++		<dict>
++			<key>CFBundleIdentifier</key>
++			<string>org.coolstar.VoodooGPIO</string>
++			<key>IOClass</key>
++			<string>VoodooGPIOSamsungLunarLake</string>
++			<key>IOProviderClass</key>
++			<string>IOACPIPlatformDevice</string>
++			<key>IONameMatch</key>
++			<array>
++				<string>INTC105D</string>
++				<string>INTC105F</string>
++			</array>
++			<key>LunarBridgeGPIOEnabled</key>
++			<false/>
++		</dict>
+ 	</dict>
+ 	<key>NSHumanReadableCopyright</key>
+ 	<string>Copyright © 2017 CoolStar. All rights reserved.</string>
+@@ -128,6 +144,8 @@
+ 		<string>13.0</string>
+ 		<key>com.apple.kpi.mach</key>
+ 		<string>13.0</string>
++		<key>com.apple.iokit.IOPCIFamily</key>
++		<string>2.9</string>
+ 	</dict>
+ 	<key>OSBundleRequired</key>
+ 	<string>Root</string>
+--- /dev/null
++++ b/Dependencies/VoodooGPIO/VoodooGPIO/LunarLakeGPIOModel.hpp
+@@ -0,0 +1,80 @@
++// SPDX-License-Identifier: GPL-3.0-only
++// Copyright 2026 IT-EXPRESS Bayern and LunarBridge contributors.
++// Independently authored bounded layout model; no Linux implementation copied.
++#ifndef LUNARBRIDGE_GPIO_MODEL_HPP
++#define LUNARBRIDGE_GPIO_MODEL_HPP
++#include <stdint.h>
++
++namespace LunarBridgeGPIO {
++struct Group { uint32_t pads, configuration; };
++struct Layout {
++    uint32_t revision, groupCount, stride, padOwnership, configurationLock;
++    uint32_t hostOwnership, interruptStatus, interruptEnable;
++    Group groups[3];
++};
++struct Pin {
++    uint32_t group, bit, configuration, padOwnership, ownershipShift;
++    uint32_t configurationLock, hostOwnership, interruptStatus, interruptEnable;
++};
++inline bool range(uint32_t offset, uint32_t bytes, uint64_t window) {
++    return !(offset & 3U) && offset <= window && bytes <= window - offset;
++}
++inline bool isSamsung(uint16_t vendor, uint16_t device, uint16_t subsystemVendor, uint16_t subsystem) {
++    return vendor == 0x8086 && device >= 0xA878 && device <= 0xA87B &&
++           subsystemVendor == 0x144D && subsystem == 0xC1DD;
++}
++inline bool valid(const Layout &layout, uint64_t window) {
++    // This first port accepts only the Samsung GPI1 profile observed in local ACPI source.
++    if (window != 0x10000 || layout.revision != 0x10000 || layout.groupCount != 3 || layout.stride != 16 ||
++        layout.padOwnership != 0xD0 || layout.configurationLock != 0x110 || layout.hostOwnership != 0x130 ||
++        layout.interruptStatus != 0x200 || layout.interruptEnable != 0x210) return false;
++    const uint32_t counts[3] = {26, 25, 14}, offsets[3] = {0x600, 0x7A0, 0x930};
++    for (unsigned index = 0; index < 3; ++index) {
++        if (layout.groups[index].pads != counts[index] || layout.groups[index].configuration != offsets[index] ||
++            !range(offsets[index], counts[index] * layout.stride, window)) return false;
++    }
++    return range(layout.padOwnership, 40, window) && range(layout.configurationLock, 24, window) &&
++           range(layout.hostOwnership, 12, window) && range(layout.interruptStatus, 12, window) && range(layout.interruptEnable, 12, window);
++}
++inline bool pin(const Layout &layout, int number, uint64_t window, Pin &result) {
++    if (!valid(layout, window) || number < 0 || number >= 65) return false;
++    uint32_t base = 0, ownerRegister = 0;
++    for (uint32_t group = 0; group < 3; ++group) {
++        if (static_cast<uint32_t>(number) < base + layout.groups[group].pads) {
++            const uint32_t local = static_cast<uint32_t>(number) - base;
++            result = {group, local, layout.groups[group].configuration + local * layout.stride,
++                      layout.padOwnership + ownerRegister * 4 + local / 8 * 4, (local % 8) * 4,
++                      layout.configurationLock + group * 8, layout.hostOwnership + group * 4,
++                      layout.interruptStatus + group * 4, layout.interruptEnable + group * 4};
++            return range(result.configuration, 4, window) && range(result.padOwnership, 4, window) &&
++                   range(result.configurationLock, 8, window) && range(result.hostOwnership, 4, window) &&
++                   range(result.interruptStatus, 4, window) && range(result.interruptEnable, 4, window);
++        }
++        base += layout.groups[group].pads;
++        ownerRegister += (layout.groups[group].pads + 7) / 8;
++    }
++    return false;
++}
++inline bool irqConfiguration(uint32_t original, unsigned type, uint32_t &configured) {
++    // Keep routing, mux, pulls, output and every unrelated pad field intact.
++    const uint32_t eventMask = 3U << 25, invert = 1U << 23;
++    uint32_t value = original & ~(eventMask | invert);
++    switch (type) {
++        case 1: value |= 1U << 25; break; // rising edge
++        case 2: value |= (1U << 25) | invert; break; // falling edge
++        case 3: value |= 3U << 25; break; // both edges
++        case 4: break; // high level
++        case 8: value |= invert; break; // low level
++        default: return false;
++    }
++    configured = value;
++    return true;
++}
++inline bool eligible(const Pin &pin, uint32_t padOwner, uint32_t hostOwner, uint32_t lock, uint32_t configuration) {
++    if (pin.group > 1 || pin.bit >= 32 || pin.ownershipShift > 28) return false;
++    const uint32_t bit = uint32_t(1) << pin.bit;
++    return !(padOwner & (0xFU << pin.ownershipShift)) && (hostOwner & bit) && !(lock & bit) &&
++           !(configuration & ((0xFU << 10) | (0xFU << 17) | (1U << 9))) && (configuration & (1U << 8));
++}
++}
++#endif
+--- /dev/null
++++ b/Dependencies/VoodooGPIO/VoodooGPIO/VoodooGPIOSamsungLunarLake.cpp
+@@ -0,0 +1,392 @@
++// SPDX-License-Identifier: GPL-3.0-only
++// Copyright 2026 IT-EXPRESS Bayern and LunarBridge contributors.
++// Experimental GPI1 port. ACPI/firmware ownership is never taken by this driver.
++#include "VoodooGPIOSamsungLunarLake.hpp"
++#include <IOKit/pci/IOPCIDevice.h>
++#include <libkern/c++/OSBoolean.h>
++#include <libkern/c++/OSData.h>
++#include <libkern/c++/OSIterator.h>
++#include <libkern/c++/OSNumber.h>
++#include <libkern/c++/OSString.h>
++
++OSDefineMetaClassAndStructors(VoodooGPIOSamsungLunarLake, VoodooGPIO);
++
++namespace {
++// Keep the active source alive even if its client removes it reentrantly.
++// The base checkForWork still reads source state after calling the action.
++class LunarBridgeGPIOInterruptSource : public IOInterruptEventSource {
++    OSDeclareDefaultStructors(LunarBridgeGPIOInterruptSource);
++public:
++    static LunarBridgeGPIOInterruptSource *create(OSObject *client, Action handler, IOService *provider) {
++        LunarBridgeGPIOInterruptSource *source = new LunarBridgeGPIOInterruptSource;
++        if (source && !source->init(client, handler, provider, 0)) {
++            source->release();
++            return nullptr;
++        }
++        return source;
++    }
++    bool checkForWork() override {
++        retain();
++        const bool more = IOInterruptEventSource::checkForWork();
++        release();
++        return more;
++    }
++};
++OSDefineMetaClassAndStructors(LunarBridgeGPIOInterruptSource, IOInterruptEventSource);
++
++const UInt8 propertiesUUID[16] = {0x14,0xD8,0xFF,0xDA,0xBA,0x6E,0x8C,0x4D,0x8A,0x91,0xBC,0x9B,0xBF,0x4A,0xA3,0x01};
++const UInt8 hierarchyUUID[16] = {0xE6,0xE3,0xB8,0xDB,0x86,0x58,0xA6,0x4B,0x87,0x95,0x13,0x19,0xF5,0x2A,0x96,0x6B};
++OSArray *section(OSObject *object, const UInt8 *identifier) {
++    OSArray *array = OSDynamicCast(OSArray, object), *found = nullptr;
++    if (!array || array->getCount() > 8 || (array->getCount() & 1)) return nullptr;
++    for (unsigned index = 0; index < array->getCount(); index += 2) {
++        OSData *uuid = OSDynamicCast(OSData, array->getObject(index));
++        if (!uuid || uuid->getLength() != 16) return nullptr;
++        if (!memcmp(uuid->getBytesNoCopy(), identifier, 16)) {
++            if (found) return nullptr;
++            found = OSDynamicCast(OSArray, array->getObject(index + 1));
++            if (!found || found->getCount() > 32) return nullptr;
++        }
++    }
++    return found;
++}
++OSObject *property(OSArray *array, const char *name) {
++    if (!array) return nullptr;
++    OSObject *found = nullptr;
++    for (unsigned index = 0; index < array->getCount(); ++index) {
++        OSArray *pair = OSDynamicCast(OSArray, array->getObject(index));
++        if (!pair || pair->getCount() != 2) return nullptr;
++        OSString *key = OSDynamicCast(OSString, pair->getObject(0));
++        if (!key) return nullptr;
++        if (key->isEqualTo(name)) {
++            if (found) return nullptr;
++            found = pair->getObject(1);
++        }
++    }
++    return found;
++}
++bool number(OSArray *array, const char *key, uint32_t &value) {
++    OSNumber *item = OSDynamicCast(OSNumber, property(array, key));
++    if (!item || item->unsigned64BitValue() > 0xFFFFFFFFULL) return false;
++    value = item->unsigned32BitValue();
++    return true;
++}
++bool string(OSArray *array, const char *key, const char *value) {
++    OSString *item = OSDynamicCast(OSString, property(array, key));
++    return item && item->isEqualTo(value);
++}
++bool samsungControllerPresent() {
++    OSDictionary *matching = IOService::serviceMatching("IOPCIDevice");
++    if (!matching) return false;
++    OSIterator *iterator = IOService::getMatchingServices(matching);
++    matching->release();
++    if (!iterator) return false;
++    bool found = false;
++    while (OSObject *object = iterator->getNextObject()) {
++        IOPCIDevice *pci = OSDynamicCast(IOPCIDevice, object);
++        if (pci && LunarBridgeGPIO::isSamsung(pci->configRead16(0), pci->configRead16(2),
++                                             pci->configRead16(0x2C), pci->configRead16(0x2E))) {
++            found = true;
++            break;
++        }
++    }
++    iterator->release();
++    return found;
++}
++}
++
++bool VoodooGPIOSamsungLunarLake::readDescription(IOACPIPlatformDevice *device) {
++    UInt32 uid = 0;
++    OSObject *object = nullptr;
++    if (device->evaluateInteger("_UID", &uid) != kIOReturnSuccess || uid != 1 ||
++        device->evaluateObject("_CID", &object) != kIOReturnSuccess) return false;
++    OSString *cid = OSDynamicCast(OSString, object);
++    bool correctID = cid && cid->isEqualTo("INTC105F");
++    OSSafeReleaseNULL(object);
++    if (!correctID || device->evaluateObject("_DSD", &object) != kIOReturnSuccess) return false;
++    OSArray *values = section(object, propertiesUUID), *links = section(object, hierarchyUUID);
++    bool valid = string(values, "intc-gpio-community-name", "Community1") &&
++        number(values, "intc-gpio-sw-revision", layout.revision) &&
++        number(values, "intc-gpio-group-count", layout.groupCount) &&
++        number(values, "intc-gpio-group-stride", layout.stride) &&
++        number(values, "intc-gpio-pad-ownership-offset", layout.padOwnership) &&
++        number(values, "intc-gpio-pad-configuration-lock-offset", layout.configurationLock) &&
++        number(values, "intc-gpio-host-software-pad-ownership-offset", layout.hostOwnership) &&
++        number(values, "intc-gpio-gpi-interrupt-status-offset", layout.interruptStatus) &&
++        number(values, "intc-gpio-gpi-interrupt-enable-offset", layout.interruptEnable) &&
++        links && links->getCount() == 3 && layout.groupCount == 3;
++    const char *keys[3] = {"intc-gpio-group-0-subproperties", "intc-gpio-group-1-subproperties", "intc-gpio-group-2-subproperties"};
++    const char *objects[3] = {"GPPF", "GPPE", "JTAG"}, *names[3] = {"GPP_F", "GPP_E", "CPUJTAG"};
++    for (unsigned index = 0; valid && index < 3; ++index) {
++        valid = string(links, keys[index], objects[index]);
++        OSObject *group = nullptr;
++        if (valid && device->evaluateObject(objects[index], &group) == kIOReturnSuccess) {
++            OSArray *groupValues = section(group, propertiesUUID);
++            valid = string(groupValues, "intc-gpio-group-name", names[index]) &&
++                number(groupValues, "intc-gpio-pad-count", layout.groups[index].pads) &&
++                number(groupValues, "intc-gpio-group-offset", layout.groups[index].configuration);
++        } else valid = false;
++        OSSafeReleaseNULL(group);
++    }
++    OSSafeReleaseNULL(object);
++    return valid && LunarBridgeGPIO::valid(layout, 0x10000);
++}
++
++IOWorkLoop *VoodooGPIOSamsungLunarLake::getWorkLoop() const { return workLoop; }
++
++bool VoodooGPIOSamsungLunarLake::start(IOService *provider) {
++    // The opt-in is deliberately checked before ACPI evaluation, MMIO mapping or IRQ registration.
++    if (getProperty("LunarBridgeGPIOEnabled") != kOSBooleanTrue) {
++        IOLog("LunarBridgeGPIO: experimental GPI1 path disabled\n");
++        return false;
++    }
++    IOACPIPlatformDevice *device = OSDynamicCast(IOACPIPlatformDevice, provider);
++    if (!device || !samsungControllerPresent() || !readDescription(device) ||
++        provider->getDeviceMemoryCount() != 1 || !IOService::start(provider)) return false;
++    mapping = provider->mapDeviceMemoryWithIndex(0);
++    if (!mapping || !LunarBridgeGPIO::valid(layout, mapping->getLength())) goto failure;
++    registers = mapping->getVirtualAddress();
++    if (!registers || (registers & 3U) || readl(registers + 0x0C) != layout.groups[0].configuration) goto failure;
++    workLoop = IOWorkLoop::workLoop();
++    if (!workLoop) goto failure;
++    command_gate = IOCommandGate::commandGate(this);
++    if (!command_gate || workLoop->addEventSource(command_gate) != kIOReturnSuccess) goto failure;
++    gateAdded = true;
++    interruptSource = LunarBridgeGPIOInterruptSource::create(this, interrupt, provider);
++    if (!interruptSource) goto failure;
++    interruptSource->disable();
++    if (workLoop->addEventSource(interruptSource) != kIOReturnSuccess) goto failure;
++    interruptAdded = true;
++    controllerIsAwake = true;
++    ready = true;
++    setProperty("LunarBridgeGPIOResourceSource", "\\_SB.GPI1");
++    setProperty("LunarBridgeGPIOExperimental", true);
++    setProperty("LunarBridgeGPIOPins", 65, 32);
++    setProperty("LunarBridgeGPIORevision", readl(registers) >> 16, 32);
++    powerStates[0].version = powerStates[1].version = 1;
++    powerStates[1].capabilityFlags = powerStates[1].outputPowerCharacter = powerStates[1].inputPowerRequirement = kIOPMPowerOn;
++    PMinit();
++    powerRegistered = true;
++    provider->joinPMtree(this);
++    if (registerPowerDriver(this, powerStates, 2) != kIOReturnSuccess) goto failure;
++    IOLog("LunarBridgeGPIO: experimental GPI1 ready; no pins changed during startup\n");
++    registerService();
++    return true;
++failure:
++    cleanup();
++    IOService::stop(provider);
++    return false;
++}
++
++bool VoodooGPIOSamsungLunarLake::eligible(const LunarBridgeGPIO::Pin &pin) {
++    // No ownership or lock register is ever written. Refuse native mux/APIC/SCI/SMI/NMI routing and disabled input.
++    return LunarBridgeGPIO::eligible(pin, readl(registers + pin.padOwnership), readl(registers + pin.hostOwnership),
++                                   readl(registers + pin.configurationLock), readl(registers + pin.configuration));
++}
++void VoodooGPIOSamsungLunarLake::mask(const LunarBridgeGPIO::Pin &pin, bool disabled) {
++    const UInt32 bit = UInt32(1) << pin.bit, value = readl(registers + pin.interruptEnable);
++    writel(disabled ? value & ~bit : value | bit, registers + pin.interruptEnable);
++}
++IOReturn VoodooGPIOSamsungLunarLake::gated(OSObject *owner, void *request, void *, void *, void *) {
++    return static_cast<VoodooGPIOSamsungLunarLake *>(owner)->perform(*static_cast<Command *>(request));
++}
++IOReturn VoodooGPIOSamsungLunarLake::command(Command &request) {
++    return command_gate && gateAdded ? command_gate->runAction(gated, &request) : kIOReturnNotReady;
++}
++IOReturn VoodooGPIOSamsungLunarLake::perform(Command &request) {
++    if (request.operation == Close) {
++        ready = false;
++        setProperty("LunarBridgeGPIOIRQCallbacks", delivered, 64);
++        setProperty("LunarBridgeGPIOOwnershipFaults", ownershipFaults, 64);
++        if (interruptSource) interruptSource->disable();
++        for (unsigned index = 0; index < 65; ++index) {
++            LunarBridgeGPIO::Pin pin;
++            Registration &entry = registrations[index];
++            if (entry.target && controllerIsAwake && registers && LunarBridgeGPIO::pin(layout, index, mapping->getLength(), pin) && eligible(pin)) {
++                mask(pin, true);
++                // Restore only our unchanged programming while ownership and unlock checks still pass.
++                if (entry.configured && eligible(pin) && readl(registers + pin.configuration) == entry.programmed)
++                    writel(entry.original, registers + pin.configuration);
++            }
++            OSSafeReleaseNULL(entry.target);
++            entry = {};
++        }
++        return kIOReturnSuccess;
++    }
++    if (!ready) return kIOReturnNotReady;
++    if (request.operation == Power) {
++        if (!request.type) {
++            if (interruptSource) interruptSource->disable();
++            for (unsigned index = 0; index < 65; ++index) {
++                Registration &entry = registrations[index];
++                entry.resumeEnabled = entry.enabled;
++                LunarBridgeGPIO::Pin pin;
++                if (entry.enabled && LunarBridgeGPIO::pin(layout, index, mapping->getLength(), pin) && eligible(pin)) mask(pin, true);
++                entry.enabled = false;
++            }
++            controllerIsAwake = false;
++        } else if (!controllerIsAwake) {
++            if (readl(registers + 0x0C) != layout.groups[0].configuration) return kIOReturnNotPermitted;
++            controllerIsAwake = true;
++            for (unsigned index = 0; index < 65; ++index) {
++                Registration &entry = registrations[index];
++                if (entry.resumeEnabled) {
++                    Command enable {Enable, static_cast<int>(index), 0, nullptr, nullptr, nullptr};
++                    if (perform(enable) != kIOReturnSuccess) IOLog("LunarBridgeGPIO: resume refused pin %u\n", index);
++                    entry.resumeEnabled = false;
++                }
++            }
++        }
++        return kIOReturnSuccess;
++    }
++    LunarBridgeGPIO::Pin pin;
++    // CPUJTAG is described for bounds/profile verification and never exported as an IRQ.
++    if (!LunarBridgeGPIO::pin(layout, request.pin, mapping->getLength(), pin) || pin.group == 2) return kIOReturnNoInterrupt;
++    // IOKit delivery type follows the parent source; Linux IRQ_TYPE values only program the pad.
++    if (request.operation == GetType)
++        return request.refcon ? getProvider()->getInterruptType(0, static_cast<int *>(request.refcon)) : kIOReturnBadArgument;
++    Registration &entry = registrations[request.pin];
++    if (request.operation == SetType) {
++        UInt32 ignored = 0;
++        if (entry.enabled || !LunarBridgeGPIO::irqConfiguration(0, request.type, ignored)) return kIOReturnBadArgument;
++        entry.type = request.type;
++        return kIOReturnSuccess;
++    }
++    if (request.operation == Register) {
++        if (!request.target || !request.handler || entry.target || !entry.type || !controllerIsAwake || !eligible(pin)) return kIOReturnNotPermitted;
++        // Do not take an IRQ bit already enabled by firmware or another consumer.
++        if (readl(registers + pin.interruptEnable) & (UInt32(1) << pin.bit)) return kIOReturnExclusiveAccess;
++        request.target->retain();
++        entry.target = request.target;
++        entry.action = request.handler;
++        entry.refcon = request.refcon;
++        entry.original = readl(registers + pin.configuration);
++        setProperty("LunarBridgeGPIOLastPin", static_cast<UInt32>(request.pin), 32);
++        setProperty("LunarBridgeGPIOLastType", entry.type, 32);
++        IOLog("LunarBridgeGPIO: registered GPI1 pin %d type %u\n", request.pin, entry.type);
++        return kIOReturnSuccess;
++    }
++    if (!entry.target) return kIOReturnNoInterrupt;
++    if (request.operation == Unregister) {
++        if (controllerIsAwake && eligible(pin)) {
++            mask(pin, true);
++            if (entry.configured && eligible(pin) && readl(registers + pin.configuration) == entry.programmed)
++                writel(entry.original, registers + pin.configuration);
++        }
++        OSSafeReleaseNULL(entry.target);
++        entry = {};
++    } else if (request.operation == Enable) {
++        if (!controllerIsAwake || !eligible(pin)) return kIOReturnNotPermitted;
++        UInt32 configured;
++        const UInt32 current = readl(registers + pin.configuration);
++        if (entry.configured && current != entry.programmed && current != entry.original) return kIOReturnNotPermitted;
++        if (!entry.configured) entry.original = current;
++        if (!LunarBridgeGPIO::irqConfiguration(current, entry.type, configured)) return kIOReturnBadArgument;
++        mask(pin, true);
++        // Track attempted programming before readback; cleanup restores only an exact owned value.
++        entry.programmed = configured;
++        entry.configured = true;
++        writel(configured, registers + pin.configuration);
++        if (readl(registers + pin.configuration) != configured) return kIOReturnIOError;
++        writel(UInt32(1) << pin.bit, registers + pin.interruptStatus);
++        entry.enabled = true;
++        mask(pin, false);
++        if (!(readl(registers + pin.interruptEnable) & (UInt32(1) << pin.bit))) {
++            entry.enabled = false;
++            return kIOReturnIOError;
++        }
++        interruptSource->enable();
++    } else if (request.operation == Disable) {
++        if (controllerIsAwake && eligible(pin)) mask(pin, true);
++        entry.enabled = entry.resumeEnabled = false;
++    } else return kIOReturnBadArgument;
++    bool any = false;
++    for (unsigned index = 0; index < 65; ++index) any |= registrations[index].enabled;
++    if (!any) interruptSource->disable();
++    return kIOReturnSuccess;
++}
++
++void VoodooGPIOSamsungLunarLake::interrupt(OSObject *owner, IOInterruptEventSource *, int) {
++    VoodooGPIOSamsungLunarLake *controller = static_cast<VoodooGPIOSamsungLunarLake *>(owner);
++    controller->retain();
++    controller->dispatch();
++    controller->release();
++}
++void VoodooGPIOSamsungLunarLake::dispatch() {
++    for (unsigned index = 0; index < 51; ++index) {
++        if (!ready || !controllerIsAwake || !registers || !mapping) return;
++        Registration &entry = registrations[index];
++        LunarBridgeGPIO::Pin pin;
++        if (!entry.enabled || !entry.target || !LunarBridgeGPIO::pin(layout, index, mapping->getLength(), pin)) continue;
++        const UInt32 bit = UInt32(1) << pin.bit;
++        if (!(readl(registers + pin.interruptStatus) & readl(registers + pin.interruptEnable) & bit)) continue;
++        if (!eligible(pin)) {
++            entry.enabled = false;
++            ready = false; // A changed owner/mux requires controller teardown before another opt-in.
++            interruptSource->disable();
++            ++ownershipFaults;
++            setProperty("LunarBridgeGPIOOwnershipFaults", ownershipFaults, 64);
++            IOLog("LunarBridgeGPIO: ownership/mux changed; IRQ delivery stopped\n");
++            return;
++        }
++        // Acknowledge only our pin; no foreign firmware status/enable bits are cleared.
++        writel(bit, registers + pin.interruptStatus);
++        OSObject *target = entry.target;
++        IOInterruptAction action = entry.action;
++        void *refcon = entry.refcon;
++        // Count before the callback so a reentrant Close publishes the last delivery.
++        if (!(++delivered & 63U)) setProperty("LunarBridgeGPIOIRQCallbacks", delivered, 64);
++        target->retain();
++        action(target, refcon, this, index);
++        target->release();
++        // Callback/release may Close, unregister clients or power down. Never reuse entry.
++        if (!ready || !controllerIsAwake || !registers || !mapping) return;
++    }
++}
++IOReturn VoodooGPIOSamsungLunarLake::getInterruptType(int number, int *type) {
++    Command request {GetType, number, 0, nullptr, nullptr, type}; return command(request);
++}
++IOReturn VoodooGPIOSamsungLunarLake::setInterruptTypeForPin(int pin, int type) {
++    Command request {SetType, pin, static_cast<unsigned>(type), nullptr, nullptr, nullptr}; return command(request);
++}
++IOReturn VoodooGPIOSamsungLunarLake::registerInterrupt(int pin, OSObject *target, IOInterruptAction handler, void *refcon) {
++    Command request {Register, pin, 0, target, handler, refcon}; return command(request);
++}
++IOReturn VoodooGPIOSamsungLunarLake::unregisterInterrupt(int pin) {
++    Command request {Unregister, pin, 0, nullptr, nullptr, nullptr}; return command(request);
++}
++IOReturn VoodooGPIOSamsungLunarLake::enableInterrupt(int pin) {
++    Command request {Enable, pin, 0, nullptr, nullptr, nullptr}; return command(request);
++}
++IOReturn VoodooGPIOSamsungLunarLake::disableInterrupt(int pin) {
++    Command request {Disable, pin, 0, nullptr, nullptr, nullptr}; return command(request);
++}
++IOReturn VoodooGPIOSamsungLunarLake::setPowerState(unsigned long state, IOService *device) {
++    if (device == this && command_gate) {
++        Command request {Power, 0, state ? 1U : 0U, nullptr, nullptr, nullptr}; command(request);
++    }
++    return kIOPMAckImplied;
++}
++void VoodooGPIOSamsungLunarLake::cleanup() {
++    if (powerRegistered) { PMstop(); powerRegistered = false; }
++    if (command_gate && gateAdded) {
++        Command request {Close, 0, 0, nullptr, nullptr, nullptr}; command(request);
++    } else ready = false;
++    if (interruptSource) {
++        interruptSource->disable();
++        if (workLoop && interruptAdded) workLoop->removeEventSource(interruptSource);
++        interruptAdded = false;
++        OSSafeReleaseNULL(interruptSource);
++    }
++    if (command_gate) {
++        if (workLoop && gateAdded) workLoop->removeEventSource(command_gate);
++        gateAdded = false;
++        OSSafeReleaseNULL(command_gate);
++    }
++    OSSafeReleaseNULL(workLoop);
++    OSSafeReleaseNULL(mapping);
++    registers = 0;
++    controllerIsAwake = false;
++}
++void VoodooGPIOSamsungLunarLake::stop(IOService *provider) { cleanup(); IOService::stop(provider); }
++void VoodooGPIOSamsungLunarLake::free() { cleanup(); IOService::free(); }
+--- /dev/null
++++ b/Dependencies/VoodooGPIO/VoodooGPIO/VoodooGPIOSamsungLunarLake.hpp
+@@ -0,0 +1,51 @@
++// SPDX-License-Identifier: GPL-3.0-only
++// Copyright 2026 IT-EXPRESS Bayern and LunarBridge contributors.
++#ifndef VOODOO_GPIO_SAMSUNG_LUNAR_LAKE_HPP
++#define VOODOO_GPIO_SAMSUNG_LUNAR_LAKE_HPP
++#include "VoodooGPIO.hpp"
++#include "LunarLakeGPIOModel.hpp"
++
++class VoodooGPIOSamsungLunarLake : public VoodooGPIO {
++    OSDeclareDefaultStructors(VoodooGPIOSamsungLunarLake);
++    struct Registration {
++        OSObject *target;
++        IOInterruptAction action;
++        void *refcon;
++        UInt32 original, programmed;
++        unsigned type;
++        bool configured, enabled, resumeEnabled;
++    } registrations[65] {};
++    LunarBridgeGPIO::Layout layout {};
++    IOMemoryMap *mapping = nullptr;
++    IOInterruptEventSource *interruptSource = nullptr;
++    IOVirtualAddress registers = 0;
++    bool ready = false, powerRegistered = false;
++    bool gateAdded = false, interruptAdded = false;
++    IOPMPowerState powerStates[2] {};
++    UInt64 delivered = 0, ownershipFaults = 0;
++    bool readDescription(IOACPIPlatformDevice *device);
++    bool eligible(const LunarBridgeGPIO::Pin &pin);
++    void mask(const LunarBridgeGPIO::Pin &pin, bool disabled);
++    void cleanup();
++    enum Operation { GetType, SetType, Register, Unregister, Enable, Disable, Power, Close };
++    struct Command { Operation operation; int pin; unsigned type; OSObject *target; IOInterruptAction handler; void *refcon; };
++    IOReturn command(Command &request);
++    IOReturn perform(Command &request);
++    static IOReturn gated(OSObject *owner, void *request, void *, void *, void *);
++    static void interrupt(OSObject *owner, IOInterruptEventSource *, int);
++    void dispatch();
++protected:
++    IOWorkLoop *getWorkLoop() const override;
++public:
++    bool start(IOService *provider) override;
++    void stop(IOService *provider) override;
++    void free() override;
++    IOReturn getInterruptType(int pin, int *type) override;
++    IOReturn registerInterrupt(int pin, OSObject *target, IOInterruptAction handler, void *refcon) override;
++    IOReturn unregisterInterrupt(int pin) override;
++    IOReturn enableInterrupt(int pin) override;
++    IOReturn disableInterrupt(int pin) override;
++    IOReturn setInterruptTypeForPin(int pin, int type) override;
++    IOReturn setPowerState(unsigned long state, IOService *device) override;
++};
++#endif
+--- /dev/null
++++ b/Dependencies/VoodooI2CACPIResourcesParser/GPIOResourceSource.hpp
+@@ -0,0 +1,28 @@
++// SPDX-License-Identifier: GPL-3.0-only
++// Copyright 2026 IT-EXPRESS Bayern and LunarBridge contributors.
++#ifndef LUNARBRIDGE_GPIO_RESOURCE_SOURCE_HPP
++#define LUNARBRIDGE_GPIO_RESOURCE_SOURCE_HPP
++#include <stdint.h>
++#include <stddef.h>
++namespace LunarBridgeGPIO {
++inline uint16_t word(const uint8_t *data) { return static_cast<uint16_t>(data[0] | data[1] << 8); }
++inline bool resourceSource(const uint8_t *data, uint32_t available, char *output, size_t capacity) {
++    if (!data || !output || capacity < 2 || available < 25 || data[0] != 0x8C || data[3] != 1 || data[4] > 1 || data[16] != 0) return false;
++    uint32_t size = static_cast<uint32_t>(word(data + 1)) + 3;
++    uint32_t pins = word(data + 14), source = word(data + 17), vendor = word(data + 19), vendorBytes = word(data + 21);
++    if (size > available || size < 25 || pins < 23 || pins + 2 != source || source >= size ||
++        vendor < source || vendor > size || vendorBytes > size - vendor || word(data + pins) == 0xFFFF) return false;
++    uint32_t end = source;
++    while (end < vendor && data[end]) {
++        const uint8_t ch = data[end];
++        if (!((ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9') || ch == '_' || ch == '.' || ch == '\\')) return false;
++        if (end - source + 1 >= capacity) return false;
++        ++end;
++    }
++    if (end == source || end >= vendor || data[end] != 0) return false;
++    for (uint32_t index = source; index < end; ++index) output[index - source] = static_cast<char>(data[index]);
++    output[end - source] = 0;
++    return true;
++}
++}
++#endif
+--- a/Dependencies/VoodooI2CACPIResourcesParser/VoodooI2CACPIResourcesParser.cpp
++++ b/Dependencies/VoodooI2CACPIResourcesParser/VoodooI2CACPIResourcesParser.cpp
+@@ -13,10 +13,13 @@
+ 
+ #include "VoodooI2CACPIResourcesParser.hpp"
+ #include "linuxirq.hpp"
++#include "GPIOResourceSource.hpp"
+ 
+ VoodooI2CACPIResourcesParser::VoodooI2CACPIResourcesParser() {
+-    found_gpio_interrupts = false;
+-    found_i2c = false;
++    found_gpio_interrupts = found_gpio_io = found_i2c = false;
++    memset(&i2c_info, 0, sizeof(i2c_info));
++    memset(&gpio_interrupts, 0, sizeof(gpio_interrupts));
++    memset(&gpio_io, 0, sizeof(gpio_io));
+ }
+ 
+ void VoodooI2CACPIResourcesParser::parseACPISerialBus(uint8_t const* res, uint32_t offset, uint32_t sz) {
+@@ -79,6 +82,8 @@
+     uint16_t len;
+     memcpy(&len, res + offset + 1, sizeof(uint16_t));
+     
++    char resource_source[64] = {};
++    if (!LunarBridgeGPIO::resourceSource(res + offset, sz - offset, resource_source, sizeof(resource_source))) return;
+     uint8_t gpio_type = res[offset + 4];
+     uint8_t flags = res[offset + 5];
+     
+@@ -105,6 +110,8 @@
+     memcpy(gpioController, res + offset + resourceOffset, vendorOffset - resourceOffset);
+     IOLog("GPIO Controller: %s\n", gpioController);*/
+     
++    const unsigned polarity = (gpio_flags >> 1) & 3U;
++    if (gpio_type == 0 && (polarity == 3U || (!(gpio_flags & 1U) && polarity == 2U))) return;
+     if (gpio_type == 0) {
+         // GPIOInt
+         
+@@ -120,6 +127,7 @@
+         
+         gpio_interrupts.pin_config = pin_config;
+         gpio_interrupts.pin_number = pin_number;
++        memcpy(gpio_interrupts.resource_source, resource_source, sizeof(resource_source));
+         
+         int irq = 0;
+         if (gpio_interrupts.level_interrupt) {
+@@ -137,10 +145,10 @@
+         } else {
+             switch (gpio_interrupts.interrupt_polarity) {
+                 case 0:
+-                    irq = IRQ_TYPE_EDGE_FALLING;
++                    irq = IRQ_TYPE_EDGE_RISING;
+                     break;
+                 case 1:
+-                    irq = IRQ_TYPE_EDGE_RISING;
++                    irq = IRQ_TYPE_EDGE_FALLING;
+                     break;
+                 case 2:
+                     irq = IRQ_TYPE_EDGE_BOTH;
+@@ -168,19 +176,18 @@
+ }
+ 
+ void VoodooI2CACPIResourcesParser::parseACPIResources(uint8_t const* res, uint32_t offset, uint32_t sz) {
+-    if (offset >= sz)
+-        return;
+-    
+-    uint8_t opcode = res[offset];
+-    
+-    uint16_t len;
+-    memcpy(&len, res + offset + 1, sizeof(uint16_t));
+-    
+-    if (opcode == 0x8c)
+-        parseACPIGPIO(res, offset, sz);
+-    if (opcode == 0x8e)
+-        parseACPISerialBus(res, offset, sz);
+-    
+-    offset += (len + 3);
+-    parseACPIResources(res, offset, sz);
++    if (!res || offset > sz) return;
++    while (offset < sz) {
++        const uint8_t opcode = res[offset];
++        uint32_t item = 0;
++        if (opcode & 0x80) {
++            if (sz - offset < 3) return;
++            item = static_cast<uint32_t>(LunarBridgeGPIO::word(res + offset + 1)) + 3;
++        } else item = (opcode & 7U) + 1;
++        if (item > sz - offset) return;
++        if (opcode == 0x8C && item >= 25) parseACPIGPIO(res, offset, offset + item);
++        if (opcode == 0x8E && item >= 18) parseACPISerialBus(res, offset, offset + item);
++        if ((opcode & 0xF8) == 0x78) return; // bounded ACPI EndTag, never recursive
++        offset += item;
++    }
+ }
+--- a/Dependencies/VoodooI2CACPIResourcesParser/VoodooI2CACPIResourcesParser.hpp
++++ b/Dependencies/VoodooI2CACPIResourcesParser/VoodooI2CACPIResourcesParser.hpp
+@@ -33,6 +33,7 @@
+     uint16_t pin_number;
+     
+     int irq_type;
++    char resource_source[64];
+ };
+ 
+ struct gpio_io_info {
+--- a/VoodooI2C/VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.cpp
++++ b/VoodooI2C/VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.cpp
+@@ -250,6 +250,7 @@
+         has_gpio_interrupts = true;
+         gpio_pin = resource_parser.gpio_interrupts.pin_number;
+         gpio_irq = resource_parser.gpio_interrupts.irq_type;
++        setProperty("gpioResourceSource", resource_parser.gpio_interrupts.resource_source);
+     }
+ 
+     if (!has_apic_interrupts && !has_gpio_interrupts)
+@@ -264,6 +265,18 @@
+     // Wait for GPIO controller, up to 1 second
+     OSDictionary* name_match = IOService::serviceMatching("VoodooGPIO");
+ 
++    IOPCIDevice *pci = controller->nub->controller->physical_device.pci_device;
++    if (pci && pci->configRead16(0) == 0x8086 && pci->configRead16(2) >= 0xA878 && pci->configRead16(2) <= 0xA87B &&
++        pci->configRead16(0x2C) == 0x144D && pci->configRead16(0x2E) == 0xC1DD) {
++        OSString *source = OSDynamicCast(OSString, getProperty("gpioResourceSource"));
++        OSDictionary *properties = OSDictionary::withCapacity(1);
++        if (!source || !source->getLength() || !properties) {
++            OSSafeReleaseNULL(properties); name_match->release(); return nullptr;
++        }
++        properties->setObject("LunarBridgeGPIOResourceSource", source);
++        name_match->setObject("IOPropertyMatch", properties);
++        properties->release();
++    }
+     IOService* matched = waitForMatchingService(name_match, 1000000000);
+     gpio_controller = OSDynamicCast(VoodooGPIO, matched);
+ 
+@@ -271,6 +284,7 @@
+         IOLog("%s::%s Got GPIO Controller! %s\n", getName(), acpi_device->getName(), gpio_controller->getName());
+     }
+     name_match->release();
++    if (gpio_controller) gpio_controller->retain();
+     OSSafeReleaseNULL(matched);
+ 
+     return gpio_controller;
+@@ -327,6 +341,7 @@
+     }
+ 
+     OSSafeReleaseNULL(work_loop);
++    OSSafeReleaseNULL(gpio_controller);
+ }
+ 
+ bool VoodooI2CDeviceNub::start(IOService* provider) {
+--- a/VoodooI2C/VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp
++++ b/VoodooI2C/VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp
+@@ -198,7 +198,7 @@
+     IOCommandGate* command_gate;
+     VoodooI2CControllerDriver* controller;
+     const char* controller_name;
+-    VoodooGPIO* gpio_controller;
++    VoodooGPIO* gpio_controller = nullptr;
+     int gpio_irq;
+     UInt16 gpio_pin;
+     UInt8 i2c_address;

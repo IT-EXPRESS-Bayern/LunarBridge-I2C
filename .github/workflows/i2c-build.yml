@@ -6,7 +6,9 @@ on:
     branches: [main]
     paths:
       - 'i2c-patch/**'
+      - 'gpio-patch/**'
       - 'docs/I2C_BACKEND.md'
+      - 'docs/GPIO_PORT.md'
       - 'tools/macho.py'
       - '.github/workflows/i2c-build.yml'
 
@@ -56,6 +58,8 @@ jobs:
           --output build/i2c-prepared
       - name: Test preparation and package validation
         run: python3 i2c-patch/test_build.py --prepared build/i2c-prepared
+      - name: Test actual GPIO bounds and resource-source model
+        run: python3 gpio-patch/test_gpio.py --prepared build/i2c-prepared --compiler clang++
       - name: Build and validate five separate native kexts
         run: python3 i2c-patch/build_i2c.py --prepared build/i2c-prepared --output build/i2c-native
       - name: Upload independent I2C research package and corresponding source

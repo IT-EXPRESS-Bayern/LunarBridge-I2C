@@ -11,10 +11,13 @@ import plistlib
 import re
 import stat
 import subprocess
+import sys
 import zipfile
 
 HERE = Path(__file__).resolve().parent
 MANIFEST = json.loads((HERE / 'build-manifest.json').read_text(encoding='utf-8'))
+sys.path.insert(0, str(HERE.parent / 'gpio-patch'))
+from prepare_gpio import apply as apply_gpio
 
 
 def digest(data):
@@ -157,11 +160,14 @@ def prepare(source, input_source, sdk, output, git='git'):
         changes[relative] = {'original_sha256': expected_hash, 'prepared_sha256': digest(project.read_bytes())}
         if alignment:
             changes[relative]['version_alignment'] = alignment
-    # The unchanged upstream source set and original license texts accompany each driver.
+    gpio_port = apply_gpio(roots['VoodooI2C'])
+    gpio_project = 'Dependencies/VoodooGPIO/VoodooGPIO.xcodeproj/project.pbxproj'
+    changes[gpio_project]['prepared_sha256'] = digest((roots['VoodooI2C'] / gpio_project).read_bytes())
+    # Upstream source sets and original license texts accompany each driver, with explicit patch hashes.
     report = {'schema': 1, 'source_pins': MANIFEST['sources'], 'project_changes': changes,
               'patch_sha256': digest((HERE / 'VoodooI2C-LunarLake-Samsung.patch').read_bytes()),
               'patched_info_sha256': digest(patched), 'independent_kexts': list(MANIFEST['expected_bundles']),
-              'gpio_lunar_lake_supported': False, 'native_hardware_tested': False,
+              'gpio_port': gpio_port, 'gpio_lunar_lake_supported': False, 'native_hardware_tested': False,
               'driver_loaded': False, 'firmware_secure_boot_changed': False}
     (output / 'preparation.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps({'prepared': True, 'kexts': report['independent_kexts'], 'hardware_tested': False}))

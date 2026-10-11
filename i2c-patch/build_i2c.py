@@ -70,6 +70,14 @@ def validate_bundle(bundle):
         if personality.get('IOPCIPrimaryMatch') != '0xa8788086 0xa8798086 0xa87a8086 0xa87b8086' or \
            personality.get('IOPCISecondaryMatch') != '0xc1dd144d':
             raise ValueError('Samsung-only experimental controller personality missing')
+    if bundle.name == 'VoodooGPIO.kext':
+        experimental = info.get('IOKitPersonalities', {}).get('VoodooGPIOSamsungLunarLake', {})
+        if experimental.get('LunarBridgeGPIOEnabled') is not False or \
+           experimental.get('IONameMatch') != ['INTC105D', 'INTC105F'] or \
+           experimental.get('IOProviderClass') != 'IOACPIPlatformDevice' or \
+           experimental.get('IOClass') != 'VoodooGPIOSamsungLunarLake' or \
+           not any('VoodooGPIOSamsungLunarLake' in name for name in metadata['defined_symbols']):
+            raise ValueError('Compiled experimental GPIO implementation missing or enabled by default')
     return {'bundle': bundle.name, 'identifier': expected, 'version': metadata['version'],
             'architecture': metadata['architecture'], 'filetype': metadata['filetype'],
             'binary_sha256': sha256(binary), 'binary_bytes': len(data), 'info_sha256': sha256(info_path),
@@ -139,12 +147,21 @@ def package(prepared, products, destination, report):
             source_manifest[name] = sha256(path)
         for path in sorted(HERE.glob('*')):
             if path.is_file() and path.suffix in ('.py', '.json', '.plist', '.patch') and path.name != 'test-report.json':
-                archive.write(path, 'source/LunarBridge/i2c-patch/' + path.name)
-        archive.write(ROOT / 'tools/macho.py', 'source/LunarBridge/tools/macho.py')
-        archive.write(ROOT / 'LICENSE', 'source/LunarBridge/LICENSE')
-        archive.write(ROOT / 'NOTICE', 'source/LunarBridge/NOTICE')
-        archive.write(ROOT / 'README.md', 'source/LunarBridge/README.md')
-        archive.write(ROOT / 'docs/I2C_BACKEND.md', 'I2C_BACKEND.md')
+                name = 'source/LunarBridge/i2c-patch/' + path.name
+                archive.write(path, name)
+                source_manifest[name] = sha256(path)
+        for path in sorted((ROOT / 'gpio-patch').glob('*')):
+            if path.is_file() and path.suffix in ('.py', '.cpp', '.hpp', '.json', '.patch'):
+                name = 'source/LunarBridge/gpio-patch/' + path.name
+                archive.write(path, name)
+                source_manifest[name] = sha256(path)
+        for relative in ('tools/macho.py', 'LICENSE', 'NOTICE', 'README.md'):
+            path, name = ROOT / relative, 'source/LunarBridge/' + relative
+            archive.write(path, name)
+            source_manifest[name] = sha256(path)
+        for name in ('I2C_BACKEND.md', 'GPIO_PORT.md'):
+            archive.write(ROOT / 'docs' / name, name)
+            source_manifest[name] = sha256(ROOT / 'docs' / name)
         archive.write(report_path, report_path.name)
         archive.writestr('OpenCore-Disabled-I2C-Fragment.plist', plistlib.dumps({'Kernel': {'Add': kernel_add}}, sort_keys=False))
         archive.writestr('SOURCE-HASHES.json', json.dumps(source_manifest, indent=2) + '\n')
@@ -156,7 +173,8 @@ def package(prepared, products, destination, report):
             'External system SDK: acidanthera/MacKernelSDK at ' + MANIFEST['sources']['MacKernelSDK']['commit'] + '.\n'
             'SDK libkmod.a is linked into these kexts; its Apple APSL license and available module source are included.\n'
             'See SOURCE-NOTICES-SDK.txt and source/MacKernelSDK/. No SDK component is relicensed.\n'
-            'Each Kexts/ bundle remains independent. No GPIO platform match is added.\n'
+            'Each Kexts/ bundle remains independent. Experimental Samsung GPI1 GPIO code is compiled but disabled by default.\n'
+            'GPIO matching requires explicit opt-in, the narrow Samsung PCI identity and the exact live ACPI layout.\n'
             'Unsigned CI build. No macOS target loading, GPIO, HID or UEFI Secure Boot test has passed.\n')
         archive.writestr('SOURCE-NOTICES-SDK.txt',
             'Linked external kernel-module library: acidanthera/MacKernelSDK\n'
